@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Logger, Inject, Body } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy, MessagePattern, Payload } from '@nestjs/microservices';
+import { SendMessageDto } from './dto/sendmessage.dto';
 
 @Controller()
 export class AppController {
@@ -17,12 +18,11 @@ export class AppController {
 
   @Post('/send')
   public sendMessage(
-    @Body('message') message: string,
-    @Body('user') user: string
+    @Body() sendMessageDto: SendMessageDto
   ) {
     return this.kafka.emit('message.created', {
-      message, 
-      user
+      'message': sendMessageDto.message,
+      'user': sendMessageDto.user
     })
   }
 }
